@@ -88,6 +88,8 @@ class Posts extends ActiveRecord
 
     public function getPostById($id)
     {
+        echo $id;
+
         $id = mysql_real_escape_string($id);
 
         return Posts::find()
@@ -100,6 +102,7 @@ class Posts extends ActiveRecord
             )
             ->from('Posts')
             ->joinWith('comments')
+            ->where(['Posts.id' => $id])
             ->groupBy('Posts.id')
             ->orderBy('Posts.date DESC')
             ->asArray()
@@ -126,13 +129,13 @@ class Posts extends ActiveRecord
     {
         $postId = mysql_real_escape_string($postId);
         $post = Posts::findOne($postId);
-        return $post->updateAllCounters(['like' => 1]);
+        return $post->updateCounters(['like' => 1]);
     }
 
     public function dislikePost($postId)
     {
         $postId = mysql_real_escape_string($postId);
         $post = Posts::findOne($postId);
-        return $post->updateAllCounters(['like' => -1]);
+        return $post->updateCounters(['like' => -1]);
     }
 }

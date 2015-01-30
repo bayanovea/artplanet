@@ -10,34 +10,36 @@ use yii\helpers\Url;
 use app\models\Posts;
 use app\models\PostForm;
 use app\models\Comments;
+use app\models\CommentForm;
 
 class PostsController extends Controller
 {
 	public function actionIndex()
     {
     	$posts = new Posts();
+        $postForm = new PostForm();
     	$allPosts = $posts->getAllPosts();
-
-    	$postForm = new PostForm();
        
         return $this->render('index', [
-        	'postForm' => $postForm,
-        	'posts' => $allPosts
+        	'posts' => $allPosts,
+            'postForm' => $postForm
         ]);
     }
 
     public function actionDetail()
     {   
         $posts = new Posts();
+        $comments = new Comments();
+        $commentForm = new CommentForm();
+
         $postId = Yii::$app->request->get('post_id');
         $post = $posts->getPostById($postId);
-
-        $comments = new Comments();
         $allComments = $comments->getCommentsByPostId($postId);
 
         return $this->render('detail', [
             'post' => $post,
-            'comments' => $allComments
+            'comments' => $allComments,
+            'commentForm' => $commentForm
         ]);
     }
 
@@ -63,15 +65,32 @@ class PostsController extends Controller
 
             /* Like post */
             case 'like-post':
-                $postId = mysql_real_escape_string($_POST['id']);
-                $result = $posts->likePost($postId);                
+                $result = $posts->likePost($_POST['id']);                
                 echo $result;
                 break;
 
              /* Disike post */
             case 'dislike-post':
-                $postId = mysql_real_escape_string($_POST['id']);
-                $result = $posts->dislikePost($postId);                
+                $result = $posts->dislikePost($_POST['id']);                
+                echo $result;
+                break;
+
+            /* Like comment */
+            case 'like-comment':
+                $result = $comments->likeComment($_POST['id']);                
+                echo $result;
+                break;
+
+             /* Disike comment */
+            case 'dislike-comment':
+                $result = $comments->dislikeComment($_POST['id']);                
+                echo $result;
+                break;
+
+            /* Add comment */
+            case 'add-comment':
+                $data = $_POST['CommentForm'];
+                $result = $comments->addComment($comments, $_POST['post_id'], $_POST['parent_id'], $data['content']);                
                 echo $result;
                 break;
 
@@ -79,4 +98,5 @@ class PostsController extends Controller
                 break;
         }
     }
+
 }

@@ -13,7 +13,8 @@ $config = [
             'showScriptName' => true,
             'rules' => [
                 'posts' => 'posts/index', 
-                'posts/<post_id:\d+>' => 'posts/detail'
+                'posts/<post_id:\d+>' => 'posts/detail',
+                'test' => 'posts/test', 
             ]
         ],
         'request' => [

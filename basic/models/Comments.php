@@ -84,4 +84,30 @@ class Comments extends \yii\db\ActiveRecord
 
         return $commentsArray;
     }
+
+    public function likeComment($commentId)
+    {
+        $commentId = mysql_real_escape_string($commentId);
+        $comment = Comments::findOne($commentId);
+        return $comment->updateCounters(['like' => 1]);
+    }
+
+    public function dislikeComment($commentId)
+    {
+        $commentId = mysql_real_escape_string($commentId);
+        $comment = Comments::findOne($commentId);
+        return $comment->updateCounters(['like' => -1]);
+    }
+
+    public function addComment($comments, $postId, $parentId, $content)
+    {
+        $comments->post_id = mysql_real_escape_string($postId);
+        $comments->comment_id = mysql_real_escape_string($parentId);
+        $comments->date = strval(time());
+        $comments->content = mysql_real_escape_string($content);
+        $comments->like = 0;
+
+        $result = $comments->save();
+        return $result;
+    }
 }

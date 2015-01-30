@@ -40,14 +40,15 @@ $this->title = 'Posts page';
 </div>
 
 <div id="posts">
-    <? foreach ($posts as $post): ?>
+    <? foreach ($posts as $post): ?>  
+        <? if(!$post['general_likes']) $post['general_likes'] = 0; ?>
     	<div class="posts-list" data-item="<?= Html::encode($post['id']) ?>">
     		<p class="posts-list-date"><?= Html::encode(date('d.m.Y H:i', $post['date'])) ?></p>
     		<a href="<?= Url::to(['posts/'.$post['id']]) ?>" class="posts-list-head"><?= Html::encode($post['name']) ?></a>
     		<p class="posts-list-like">Likes count: <span class="posts-list-likes-num"><?= Html::encode($post['general_likes']) ?></span></p>
     		<p class="posts-list-comments">Comments count: <?= Html::encode($post['comments_count']) ?></p>
             <div class="btn btn-default btn-like-post">Like</div>
-            <div class="btn btn-default btn-dislike-post">Displike</div><br/>
+            <div class="btn btn-default btn-dislike-post">Dislike</div><br/>
             <div class="btn btn-danger delete-post">Удалить пост</div>
     	</div>
     	<hr/>
